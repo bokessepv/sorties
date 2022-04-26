@@ -2,15 +2,15 @@
     <ul>
         <li><a href="{{ path("main_home") }}" title="Accueil">Accueil</a></li>
         {% if app.user %}
-            <a href="{# path mon profil #}" title="Profil">Mon profil</a>
-            <a href="{{ path('') }}" title="Logout">Se deconnecter</a>
+            <a href="{{ path('') }}" title="Profil">Mon profil</a>
+            <a href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>
             {% if is_granted("ROLE_ADMIN") %}
                 <li><a href="{# ville path #}" title="Ville">Ville</a></li>
                 <li><a href="{# campus path #}" title="Campus">Campus</a></li>
             {% endif %}
         {% else %}
-            <a href="{{ path('') }}" title="Create your account">Register</a>
-            <a href="{{ path('') }}" title="Login">Se</a>
+            <a href="{{ path('app_register') }}" title="Create your account">Register</a>
+            <a href="{{ path('app_login') }}" title="Login">Se</a>
         {% endif %}
     </ul>
 </nav>
