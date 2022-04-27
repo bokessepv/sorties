@@ -15,10 +15,27 @@
             <div class="container">
                 <div class="header-top">
                     <h1 class="header-logo">
-                       <a href="" title="Retour a l'accueil">
-                           <img src="{{ asset('img/logo_sortir.png') }}" alt="Logo sortir.com">SORTIR.COM
-                       </a>
+                        <img src="{{ asset('img/logo_sortir.png') }}" alt="Logo sortir.com">SORTIR.COM
                     </h1>
+                    <nav class="user-nav">
+                        <ul>
+                            {# afficher ville et campus si l'utilisateur a un role d'admin, sinon il est caché #}
+                            {% if is_granted("ROLE_ADMIN") %}
+                                <a href="{# ville path #}" title="Ville">Ville</a>
+                                <a href="{# campus path #}" title="Campus">Campus</a>
+                            {% endif %}
+
+                            <a href="{{ path("main_home") }}" title="Accueil">Accueil</a>
+                            {# si l'utilisateur est connecté, alors seule le bouton mon profil est se deconnecter
+                             seront afficher dans la barre de nav, sinon, le bouton s'inscrire et se connecter apparaitrons#}
+                            {% if app.user %}
+                                <a href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>
+                            {% else %}
+                                <a href="{{ path('app_register') }}" title="Create your account">S'inscrire</a>
+                                <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
+                            {% endif %}
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </header>

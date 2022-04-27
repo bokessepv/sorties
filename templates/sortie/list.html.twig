@@ -1,6 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <section class="sortie-list">
+        {% for sortie in sorties %}
+        <article>
+            <a href="{{ path('sortie_details', {"id": sortie.id}) }}" title="view all list of sortie">
+                {{ sortie.nom }} {{ sortie.duree }}
+            </a>
+        </article>
+        {% endfor %}
+    </section>
 
 {% endblock %}
 

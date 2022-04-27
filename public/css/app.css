@@ -10,11 +10,27 @@ body {
 }
 
 .header-logo {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: normal;
-    justify-content: space-between;
 }
 .header-logo img {
     max-width: 50px;
     margin-right: 5px;
 }
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+}
+.user-nav  {
+    margin-left: 1rem;
+    float: right;
+
+}
+header h1 {
+    flex: 1;
+    margin: 0 0 10px 0;
+}
+
+
+
