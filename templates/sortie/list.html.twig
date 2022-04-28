@@ -2,18 +2,57 @@
 
 {% block body %}
     <section class="sortie-list">
-        {% for sortie in sorties %}
         <article>
-            <a href="{{ path('sortie_details', {"id": sortie.id}) }}" title="view all list of sortie">
-                {{ sortie.nom }} {{ sortie.duree }}
-            </a>
+            {# Tableau: liste des sorties et leur categories #}
+            <table class="table-sortie">
+                <thead>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date et heure de la sortie</th>
+                    <th>Cloture</th>
+                    <th>Inscrits/Places</th>
+                    <th>Etat</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for sortie in sorties %}
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.dateHeureDebut|date("Y-m-d h:m:s") }}</td>
+                        <td>{{ sortie.dateLimiteInscription|date("Y-m-d") }}</td>
+                        <td>Hello</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>Helle</td>
+                        <td>Helli</td>
+                        <td>
+                            <ul>
+                                <a href="{{ path("sortie_details", {"id" : sortie.id}) }}" title="vue detail sortie">Afficher</a> -
+                                <a href="{{ path("sortie_details", {"id" : sortie.id}) }}" title="vue modifier sortie">Modifier</a>
+                            </ul>
+
+
+                         </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {# Si l'user est connecté, alors il pourra créer sa sortie, sinon on lui demandera de se connecter #}
+            {% if app.user %}
+                <button class="button-creer" type="button">
+                <a href="{{ path('sortie_create') }}" title="creer sortie">Creer une sortie</a></button>
+                {% else %}
+                    <button class="button-creer" type="button">
+                        <a href="{{ path('app_login') }}" title="creer sortie">Creer une sortie</a></button>
+            {% endif %}
         </article>
-        {% endfor %}
     </section>
 
 {% endblock %}
 
 {% block title %}
-
+Sortie | {{ parent() }}
 {% endblock %}
 

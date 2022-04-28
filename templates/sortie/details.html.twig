@@ -2,9 +2,12 @@
 
 {% block title %}
 
+{{ sortie }} | {{ parent() }}
+
 {% endblock %}
 
 {% block body %}
-
+<p>Nom de la sortie: {{ sortie.nom }}</p>
+<p>Date et heure de la sortie: {{ sortie.dateHeureDebut|date("Y-m-d h:m:s") }}</p>
 {% endblock %}
 

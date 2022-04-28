@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SortieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +42,17 @@ class Sortie
      * @ORM\Column(type="integer")
      */
     private $nbInscriptionMax;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="sortie")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $etat;
+
+    public function __construct()
+    {
+        $this->sortie = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +115,24 @@ class Sortie
     public function setNbInscriptionMax(int $nbInscriptionMax): self
     {
         $this->nbInscriptionMax = $nbInscriptionMax;
+
+        return $this;
+    }
+
+
+    public function __toString()
+    {
+        return $this->nom;
+    }
+
+    public function getEtat(): ?Etat
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?Etat $etat): self
+    {
+        $this->etat = $etat;
 
         return $this;
     }
