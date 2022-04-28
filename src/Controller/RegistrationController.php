@@ -51,4 +51,11 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form->createView(),
         ]);
     }
+    /**
+     * @Route("/update", name="app_update")
+     */
+     public function Update(): Response
+    {
+        return $this->render('register/update.html.twig');
+    }
 }
