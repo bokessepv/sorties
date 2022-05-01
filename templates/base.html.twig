@@ -7,7 +7,9 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>{% block title %}Sorties{% endblock %}</title>
         {# le css #}
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('build/app.b532f9c4.css') }}"/>
+        {% endblock %}
     </head>
     <body>
         {# contenu du haut-de-page#}
@@ -24,11 +26,11 @@
                                 <a href="{# ville path #}" title="Ville">Ville</a>
                                 <a href="{# campus path #}" title="Campus">Campus</a>
                             {% endif %}
-
-                            <a href="{{ path("sortie_list") }}" title="Accueil">Accueil</a>
-                            {# si l'utilisateur est connecté, alors seule le bouton mon profil est se deconnecter
-                             seront afficher dans la barre de nav, sinon, le bouton s'inscrire et se connecter apparaitrons#}
+                            {# si l'utilisateur est connecté, alors seule le bouton Accueil, mon profil et se deconnecter
+                             seront afficher dans la barre de nav, sinon, le bouton s'inscrire et se connecter apparaitrons #}
                             {% if app.user %}
+                                <a href="{{ path("sortie_accueil") }}" title="Accueil">Accueil</a>
+                                <a href="{{ path('sortie_profile') }}" title="Mon Profil">Mon profil</a>
                                 <a href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>
                             {% else %}
                                 <a href="{{ path('app_register') }}" title="Create your account">S'inscrire</a>

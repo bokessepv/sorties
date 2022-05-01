@@ -2,12 +2,58 @@
 
 {% block title %}
 
-{{ sortie }} | {{ parent() }}
+Afficher une sortie | {{ parent() }}
 
 {% endblock %}
 
 {% block body %}
-<p>Nom de la sortie: {{ sortie.nom }}</p>
-<p>Date et heure de la sortie: {{ sortie.dateHeureDebut|date("Y-m-d h:m:s") }}</p>
+
+    <h2 class="title-page"> Afficher une sortie</h2>
+    <div class="row" style="text-align: center">
+        <div class="column">
+            <div class="card">
+                <p>Nom de la sortie: {{ sortie.nom }}</p>
+                <p>Date et heure de la sortie: {{ sortie.dateHeureDebut|date("d/m/Y h:m:s") }}</p>
+                <p>Date limite d'inscription: {{ sortie.dateLimiteInscription| date("d/m/Y") }}</p>
+                <p>Nombre de places: {{sortie.nbInscriptionMax}} </p>
+                <p>Durée: {{ sortie.duree }} </p>
+                <p>Description et infos: {{ sortie.infosSortie}}  </p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <p></p>
+                <p>{{ sortie.siteOrganisateur.nom }}</p>
+                <p>Some text</p>
+                <p>Some text</p>
+                <p>Some text</p>
+                <p>Some text</p>
+                <p>Some text</p>
+                <p>Some text</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="card">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Pseudo</th>
+                        <th>Nom</th>
+                        <th>Ville</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>user1</td>
+                        <td>nom</td>
+                        <td>ville</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 

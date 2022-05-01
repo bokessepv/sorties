@@ -12,10 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Etat
 {
+    const CREE = 1;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
      */
     private $id;
 
