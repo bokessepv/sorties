@@ -1,57 +1,42 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
-                </li>
-            </ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        {% if app.user %}
+            <div class="logo">
+                <a href="{{ path('sortie_accueil') }}"><img src="{{ asset('img/logo_sortir.png') }}" alt="logo"></a>
+            </div>
+            <div class="nav-item ml-5">
+                <a class=" navbar-brand " href="{{ path('sortie_accueil') }}">Sortir.com</a>
+            </div>
+        {% else %}
+            <div class="logo">
+                <a href="{{ path('app_login') }}"><img src="{{ asset('img/logo_sortir.png') }}" alt="logo"></a>
+            </div>
+            <div class="nav-item ml-5">
+                <a href="{{ path('app_login') }}">Sortir.com</a>
+            </div>
+        {% endif %}
+        <div class="container">
+            {% if app.user %}
+                <nav class="user-nav">
+                    <ul>
+                        {#                 afficher ville et campus si l'utilisateur a un role d'admin, sinon il est caché#}
+                        {% if is_granted("ROLE_ADMIN") %}
+                            <a href="" title="Ville">Ville</a>
+                            <a href="" title="Campus">Campus</a>
+                        {% endif %}
+                        {#                 Si l'utilisateur est connecté, alors seule le bouton Accueil, mon profil et se deconnecter#}
+                        {#                seront afficher dans la barre de nav, sinon, le bouton s'inscrire et se connecter apparaitrons#}
+                        {% if app.user %}
+                            <a href="{{ path("sortie_accueil") }}" title="Accueil">Accueil</a>
+                            <a href="{{ path('app_update') }}" title="Mon Profil">Mon profil</a>
+                            <a href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>
+                        {% else %}
+                            <a href="{{ path('app_register') }}" title="Create your account">S'inscrire</a>
+                            <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
         </div>
-    </div>
 </nav>
 
 
-{#<div class="container">#}
-{#    {% if app.user %}#}
-{#        <nav class="user-nav">#}
-{#            <ul>#}
-{#                #}{# afficher ville et campus si l'utilisateur a un role d'admin, sinon il est caché #}
-{#                {% if is_granted("ROLE_ADMIN") %}#}
-{#                    <a href="#}{# ville path #}{#" title="Ville">Ville</a>#}
-{#                    <a href="#}{# campus path #}{#" title="Campus">Campus</a>#}
-{#                {% endif %}#}
-{#                #}{# si l'utilisateur est connecté, alors seule le bouton Accueil, mon profil et se deconnecter#}
-{#                                 seront afficher dans la barre de nav, sinon, le bouton s'inscrire et se connecter apparaitrons #}
-{#                {% if app.user %}#}
-{#                    <h1 class="header-logo">#}
-{#                        <img src="{{ asset('img/logo_sortir.png') }}" alt="Logo sortir.com">SORTIR.COM#}
-{#                    </h1>#}
-{#                    <a href="{{ path("sortie_accueil") }}" title="Accueil">Accueil</a>#}
-{#                    <a href="{{ path('app_update') }}" title="Mon Profil">Mon profil</a>#}
-{#                    <a href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>#}
-{#                {% else %}#}
-{#                    <h1 class="header-logo">#}
-{#                        <img src="{{ asset('img/logo_sortir.png') }}" alt="Logo sortir.com">SORTIR.COM#}
-{#                    </h1>#}
-{#                    <a href="{{ path('app_register') }}" title="Create your account">S'inscrire</a>#}
-{#                    <a href="{{ path('app_login') }}" title="Login">Se connecter</a>#}
-{#                {% endif %}#}
-{#            </ul>#}
-{#        </nav>#}
-{#    {% endif %}#}
-
-
-{#</div>#}

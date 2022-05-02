@@ -2,7 +2,7 @@
 
 {% block body %}
         <h3 class="date-page"> Date du jour : {{ "now" | date("d/m/Y") }}</h3>
-        <h3 cl
+        <h3 class=""
 
     <section class="sortie-list">
         <article>
@@ -58,7 +58,7 @@
             {# Si l'user est connecté, alors il pourra créer sa sortie, sinon on lui demandera de se connecter #}
             {% if app.user %}
                 <button class="button-creer" type="button">
-                <a href="{{ path('sortie_create') }}" title="creer sortie">Creer une sortie</a></button>
+                <a href="{{ path('sortie_sortie_create') }}" title="creer sortie">Creer une sortie</a></button>
                 {% else %}
                     <button class="button-creer" type="button">
                         <a href="{{ path('app_login') }}" title="creer sortie">Creer une sortie</a></button>
