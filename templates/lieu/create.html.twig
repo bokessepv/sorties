@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="col-lg-3 offset-2">
+    {{ form_start(lieuForm) }}
+    {{ form_widget(lieuForm) }}
+    <button>Enregistrer</button>
+    {{ form_end(lieuForm) }}
+</div>
+{% endblock %}
+
+{% block title %}
+Creer un lieu | {{ parent() }}
+{% endblock %}
+

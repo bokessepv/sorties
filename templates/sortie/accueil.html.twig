@@ -2,10 +2,21 @@
 
 {% block body %}
         <h3 class="date-page"> Date du jour : {{ "now" | date("d/m/Y") }}</h3>
-        <h3 class="user-page"> Participants : {{ app.user.userIdentifier }}</h3>
+        <h3 cl
 
     <section class="sortie-list">
         <article>
+            <div class="row">
+                <h5>Filtrer les sorties</h5>
+                <div class="col-lg-6">
+                    <div>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+
+                </div>
+            </div>
             {# Tableau: liste des sorties et leur categories #}
             <div class="container p-0 m-0">
                 <table class="table-sortie">
@@ -29,9 +40,9 @@
                             <td>{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
                             <td>{{ sortie.nbInscriptionMax }}</td>
                             <td>{{ sortie.etat.libelle }}</td>
-                            <td>Helle</td>
+                            <td></td>
                             <td>
-                                <a href="{{ path("sortie_accueil", {"id" : sortie.user.username}) }}" title="profil organisateur">{{ sortie.user.username }}</a>
+                                <a href="" title="profil organisateur">{{ sortie.participant.userIdentifier }}</a>
                             </td>
                             <td>
                                 <ul>

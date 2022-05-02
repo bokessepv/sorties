@@ -60,8 +60,8 @@ class SortieRepository extends ServiceEntityRepository
 
 
 
-    public function search(array $filters) {
-        $queryBuilder = $this->createQueryBuilder('s');
+    public function search() {
+        $queryBuilder = $this->createQueryBuilder('');
 
 
         if(isset($filters['']) && !empty($filters['nom'])) {

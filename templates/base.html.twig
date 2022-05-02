@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport"
@@ -14,34 +14,8 @@
     <body>
         {# contenu du haut-de-page#}
         <header>
-            <div class="container">
-                <div class="header-top">
-                    <h1 class="header-logo">
-                        <img src="{{ asset('img/logo_sortir.png') }}" alt="Logo sortir.com">SORTIR.COM
-                    </h1>
-                    <nav class="user-nav">
-                        <ul>
-                            {# afficher ville et campus si l'utilisateur a un role d'admin, sinon il est caché #}
-                            {% if is_granted("ROLE_ADMIN") %}
-                                <a href="{# ville path #}" title="Ville">Ville</a>
-                                <a href="{# campus path #}" title="Campus">Campus</a>
-                            {% endif %}
-                            {# si l'utilisateur est connecté, alors seule le bouton Accueil, mon profil et se deconnecter
-                             seront afficher dans la barre de nav, sinon, le bouton s'inscrire et se connecter apparaitrons #}
-                            {% if app.user %}
-                                <a href="{{ path("sortie_accueil") }}" title="Accueil">Accueil</a>
-                                <a href="{{ path('sortie_profile') }}" title="Mon Profil">Mon profil</a>
-                                <a href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>
-                            {% else %}
-                                <a href="{{ path('app_register') }}" title="Create your account">S'inscrire</a>
-                                <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+            {% include 'includes/header.html.twig' %}
         </header>
-
         {# read and display all flash messages #}
         {% for label, messages in app.flashes %}
             {% for message in messages %}
@@ -58,7 +32,7 @@
 
         {# contenu bas de page #}
         <footer>
-
+            {% include 'includes/footer.html.twig' %}
         </footer>
     </body>
 </html>

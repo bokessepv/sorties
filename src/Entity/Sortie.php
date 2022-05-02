@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -19,21 +21,26 @@ class Sortie
     private $id;
 
     /**
+     * @Assert\NotBlank(message="Veuillez inserer votre nom de sortie !")
+     * @Assert\Length(min=2, max=50)
      * @ORM\Column(type="string", length=50)
      */
     private $nom;
 
     /**
+     * @Assert\GreaterThanOrEqual(propertyPath="dateLimiteInscription")
      * @ORM\Column(type="datetime")
      */
     private $dateHeureDebut;
 
     /**
+     * @Assert\Range(min="1", max="1000")
      * @ORM\Column(type="integer")
      */
     private $duree;
 
     /**
+     * @Assert\LessThanOrEqual(propertyPath="dateHeureDebut")
      * @ORM\Column(type="date")
      */
     private $dateLimiteInscription;
@@ -49,9 +56,37 @@ class Sortie
      */
     private $etat;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $infosSortie;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="siteOrganisateur")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="lieu")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $lieu;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="organisateur")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organisateur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="participants")
+     */
+    private $participants;
+
     public function __construct()
     {
-        $this->sortie = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -133,6 +168,81 @@ class Sortie
     public function setEtat(?Etat $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getInfosSortie(): ?string
+    {
+        return $this->infosSortie;
+    }
+
+    public function setInfosSortie(string $infosSortie): self
+    {
+        $this->infosSortie = $infosSortie;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function getLieu(): ?Lieu
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?Lieu $lieu): self
+    {
+        $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getParticipant(): ?Participant
+    {
+        return $this->organisateur;
+    }
+
+    public function setParticipant(?Participant $organisateur): self
+    {
+        $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participant>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Participant $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+            $participant->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Participant $participant): self
+    {
+        if ($this->participants->removeElement($participant)) {
+            $participant->removeParticipant($this);
+        }
 
         return $this;
     }

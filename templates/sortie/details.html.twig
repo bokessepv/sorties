@@ -15,21 +15,19 @@ Afficher une sortie | {{ parent() }}
                 <p>Nom de la sortie: {{ sortie.nom }}</p>
                 <p>Date et heure de la sortie: {{ sortie.dateHeureDebut|date("d/m/Y h:m:s") }}</p>
                 <p>Date limite d'inscription: {{ sortie.dateLimiteInscription| date("d/m/Y") }}</p>
-                <p>Nombre de places: {{sortie.nbInscriptionMax}} </p>
-                <p>Durée: {{ sortie.duree }} </p>
+                <p>Nombre de places:{{ participants }} /{{sortie.nbInscriptionMax}} </p>
+                <p>Durée: {{ sortie.duree }} minutes</p>
                 <p>Description et infos: {{ sortie.infosSortie}}  </p>
             </div>
         </div>
         <div class="column">
             <div class="card">
-                <p></p>
-                <p>{{ sortie.siteOrganisateur.nom }}</p>
-                <p>Some text</p>
-                <p>Some text</p>
-                <p>Some text</p>
-                <p>Some text</p>
-                <p>Some text</p>
-                <p>Some text</p>
+                <p>{{ sortie.campus.nom }}</p>
+                <p>{{ sortie.lieu.nom }}</p>
+                <p>{{ sortie.lieu.rue }}</p>
+                <p>{{ sortie.lieu.ville.codePostal }}</p>
+                <p>{{ sortie.lieu.latitude }}</p>
+                <p>{{ sortie.lieu.longitude }}</p>
             </div>
         </div>
     </div>
