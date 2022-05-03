@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\UpdateFormType;
 use App\Entity\Participant;
 use App\Form\RegistrationFormType;
 use App\Security\AppAuthenticator;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,7 +30,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
+
             $user->setPassword(
             $userPasswordHasher->hashPassword(
                     $user,
@@ -51,11 +53,28 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form->createView(),
         ]);
     }
+    //Pour récupérer et afficher un profil
+    /**
+    * @Route("/profile", name="app_profile")
+    */
+    public function Profile($id): Response
+    {
+        $profile = $this->getDoctrine()->getRepository(Participant::class)->findById($id);
+
+        return $this->render('registration/profil.html.twig', [
+            "profile" => $profile,
+        ]);
+    }
+    //Pour modifier son profil
     /**
      * @Route("/update", name="app_update")
      */
      public function Update(): Response
-    {
-        return $this->render('register/update.html.twig');
-    }
+     {
+         $form = $this-> createForm(UpdateFormType::class);
+         return $this->render('registration/update.html.twig', [
+             "titleForm" => "Mon profil",
+             "updateForm" => $form->createView(),
+         ]);
+     }
 }

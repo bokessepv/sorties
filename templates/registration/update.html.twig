@@ -1,19 +1,13 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Mon profil{% endblock %}
+{% extends "base.html.twig" %}
 
 {% block body %}
-    <h1>Mon profil</h1>
-    <p>Nom: {{ app.user.firstname }}</p>
-    <p>Prenom: {{ app.user.lastname }}</p>
-    <p>Username: {{ app.user.username }}</p>
-    <p>Telephone: {{ app.user.telephone }}</p>
-    <p>Email: {{ app.user.email }}</p>
-    <p>MotDePasse: {{ app.user.password }}</p>
-    <p>Campus: {{ app. }}</p>
-   {#  <form action="post.php" method="post" enctype="multipart/form-data">
-        <input type="file" name="fichier">
-    </form>#}
-        <button type="submit" class="btn">Register</button>
+    <h1>{{ titleForm }}</h1>
+    <img src="{{ asset('public/images/') }}">
 
+    {#  {% form_theme updateForm 'bootstrap_5_layout.html.twig' %}#}
+    {% form_theme updateForm 'bootstrap_5_layout.html.twig' %}
+    {{ form_start(updateForm) }}
+    {{ form_widget(updateForm) }}
+    <button type="submit" class="btn">Enregistrer</button>
+    {{ form_end(updateForm) }}
 {% endblock %}
