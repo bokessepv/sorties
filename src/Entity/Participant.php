@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
@@ -59,21 +60,22 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $telephone;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="estRattache")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $campus;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participant")
-     */
-    private $organisateur;
 
     /**
      * @ORM\ManyToMany(targetEntity=Sortie::class, inversedBy="participants")
      */
     private $participants;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="participants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="organisateur")
+     */
+    private $organisateur;
 
     public function __construct()
     {
@@ -213,6 +215,32 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+
+
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Sortie $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Sortie $participant): self
+    {
+        $this->participants->removeElement($participant);
+
+        return $this;
+    }
+
     public function getCampus(): ?Campus
     {
         return $this->campus;
@@ -237,7 +265,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->organisateur->contains($organisateur)) {
             $this->organisateur[] = $organisateur;
-            $organisateur->setParticipant($this);
+            $organisateur->setOrganisateur($this);
         }
 
         return $this;
@@ -247,34 +275,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->organisateur->removeElement($organisateur)) {
             // set the owning side to null (unless already changed)
-            if ($organisateur->getParticipant() === $this) {
-                $organisateur->setParticipant(null);
+            if ($organisateur->getOrganisateur() === $this) {
+                $organisateur->setOrganisateur(null);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Sortie>
-     */
-    public function getParticipants(): Collection
-    {
-        return $this->participants;
-    }
-
-    public function addParticipant(Sortie $participant): self
-    {
-        if (!$this->participants->contains($participant)) {
-            $this->participants[] = $participant;
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(Sortie $participant): self
-    {
-        $this->participants->removeElement($participant);
 
         return $this;
     }

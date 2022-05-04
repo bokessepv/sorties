@@ -61,17 +61,20 @@ class Sortie
      */
     private $infosSortie;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="siteOrganisateur")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $campus;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="lieu")
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
+
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="participants")
+     */
+    private $participants;
 
     /**
      * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="organisateur")
@@ -80,9 +83,10 @@ class Sortie
     private $organisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="participants")
+     * @ORM\ManyToOne(targetEntity=Campus::class)
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $participants;
+    private $campusOrganisateur;
 
     public function __construct()
     {
@@ -184,17 +188,6 @@ class Sortie
         return $this;
     }
 
-    public function getCampus(): ?Campus
-    {
-        return $this->campus;
-    }
-
-    public function setCampus(?Campus $campus): self
-    {
-        $this->campus = $campus;
-
-        return $this;
-    }
 
     public function getLieu(): ?Lieu
     {
@@ -208,17 +201,6 @@ class Sortie
         return $this;
     }
 
-    public function getParticipant(): ?Participant
-    {
-        return $this->organisateur;
-    }
-
-    public function setParticipant(?Participant $organisateur): self
-    {
-        $this->organisateur = $organisateur;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Participant>
@@ -243,6 +225,30 @@ class Sortie
         if ($this->participants->removeElement($participant)) {
             $participant->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    public function getOrganisateur(): ?Participant
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?Participant $organisateur): self
+    {
+        $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getCampusOrganisateur(): ?Campus
+    {
+        return $this->campusOrganisateur;
+    }
+
+    public function setCampusOrganisateur(?Campus $campusOrganisateur): self
+    {
+        $this->campusOrganisateur = $campusOrganisateur;
 
         return $this;
     }

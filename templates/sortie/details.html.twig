@@ -2,7 +2,7 @@
 
 {% block title %}
 
-Afficher une sortie | {{ parent() }}
+{{ parent() }} - Afficher une sortie
 
 {% endblock %}
 
@@ -22,7 +22,7 @@ Afficher une sortie | {{ parent() }}
         </div>
         <div class="column">
             <div class="card">
-                <p>{{ sortie.campus.nom }}</p>
+                <p>{{ sortie.campusOrganisateur.nom }}</p>
                 <p>{{ sortie.lieu.nom }}</p>
                 <p>{{ sortie.lieu.rue }}</p>
                 <p>{{ sortie.lieu.ville.codePostal }}</p>

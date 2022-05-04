@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
-use App\Repository\VilleRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,35 +16,136 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-/**
- * @Route("/sorties", name="sortie_")
- */
+
 class SortieController extends AbstractController
 {
+    /**
+     * @Route("/accueil/sortie", name="sortie_create")
+     */
+    public function createSortie(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        EtatRepository $etatRepository
+    ): Response
+    {
+        $sortie = new Sortie();
+        $lieu = new Lieu();
+
+        $participant = $this->getUser();
+
+        $campusOrganisateur = $this->getUser()->getCampus();
+
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $lieuForm = $this->createForm(lieuType::class, $lieu);
+
+        $sortieForm->handleRequest($request);
+        $lieuForm->handleRequest($request);
+
+        if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+
+
+            $etatCreation = $etatRepository->find(1);
+            $sortie->setEtat($etatCreation);
+
+            $sortie->setDateHeureDebut(new DateTime());
+            $sortie->addParticipant($participant);
+            $sortie->setCampusOrganisateur($campusOrganisateur);
+            $sortie->setOrganisateur($this->getUser());
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('Bravo', 'Sortie ajoutés !');
+            return $this->redirectToRoute('sortie_details', ['id'=> $sortie->getId()]);
+        }
+
+        if($lieuForm->isSubmitted() && $lieuForm->isValid()){
+            $entityManager->persist($lieu);
+            $entityManager->flush();
+
+            $this->addFlash('Bravo', 'Lieu ajoutés');
+            return $this->redirectToRoute('sortie_create');
+
+        }
+
+
+
+        return $this->render('sortie/create.html.twig', [
+            'sortieForm' => $sortieForm->createView(),
+            'lieuForm' => $lieuForm->createView(),
+            'campus' => $this->getUser()->getCampus(),
+        ]);
+    }
+
+
 
     /**
-     * @Route("/", name="accueil")
+     * @Route("/accueil/sortie/{id}", name="sortie_update")
      */
-    public function accueil(SortieRepository $sortieRepository): Response
+    public function updateSortie(int $id,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ): Response
     {
-        // récupere les sorties publies
-        // on appelle une méthode personalisée
+        $sortie = $sortieRepository->find($id);
 
-        $sorties = $sortieRepository->findByAll();
+        $lieu = $sortie->getLieu();
 
-        return $this->render('sortie/accueil.html.twig', [
-            'sorties' => $sorties
+        $participant = $this->getUser();
+
+        $campusOrganisateur = $this->getUser()->getCampus();
+
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $lieuForm = $this->createForm(lieuType::class, $lieu);
+
+        $sortieForm->handleRequest($request);
+        $lieuForm->handleRequest($request);
+
+        if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+
+
+            $etatCreation = $etatRepository->find(1);
+            $sortie->setEtat($etatCreation);
+
+            $sortie->setDateHeureDebut(new DateTime());
+            $sortie->addParticipant($participant);
+            $sortie->setCampusOrganisateur($campusOrganisateur);
+            $sortie->setOrganisateur($this->getUser());
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('Bravo', 'Sortie modifiés !');
+            return $this->redirectToRoute('sortie_details', ['id'=> $sortie->getId()]);
+        }
+
+        if($lieuForm->isSubmitted() && $lieuForm->isValid()){
+            $entityManager->persist($lieu);
+            $entityManager->flush();
+
+            $this->addFlash('Bravo', 'Lieu ajoutés');
+            return $this->redirectToRoute('sortie_create');
+
+        }
+
+
+
+        return $this->render('sortie/updateSortie.html.twig', [
+            'sortieForm' => $sortieForm->createView(),
+            'lieuForm' => $lieuForm->createView(),
+            'campus' => $this->getUser()->getCampus(),
         ]);
     }
 
     /**
-     * @Route("/details/{id}", name="details")
+     * @Route("/accueil/details/{id}", name="sortie_details")
      */
     public function details(int $id, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
 //        ajout d'un participant a la sortie (
-        $sortie->addParticipant($this->getUser());
 
 
         // si il n'existe pas en bdd
@@ -59,65 +160,4 @@ class SortieController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/accueil/sortie", name="sortie_create")
-     */
-    public function create(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        VilleRepository $villeRepository,
-        EtatRepository $etatRepository
-    ): Response
-    {
-        $sortie = new Sortie();
-
-        $participant = $this->getUser();
-
-        $campusOrganisateur = $this->getUser()->getCampus();
-
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
-
-        $sortieForm->handleRequest($request);
-
-        if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-
-            $ville = $villeRepository->find(1);
-
-            $lieu = new Lieu();
-           $lieu->setNom('Bowling');
-           $lieu->setRue('1 rue de la pierre');
-           $lieu->setLongitude('56');
-           $lieu->setLatitude('56');
-           $lieu->setVille($ville);
-
-
-
-
-           $entityManager->persist($lieu);
-           $entityManager->flush();
-
-           $sortie->setLieu($lieu);
-            $etatCreation = $etatRepository->find(1);
-            $sortie->setEtat($etatCreation);
-
-            $sortie->setDateHeureDebut(new \DateTime());
-
-            $sortie->setParticipant($participant);
-
-
-            $sortie->setCampus($campusOrganisateur);
-
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-
-            $this->addFlash('Bravo', 'Sortie ajoutés !');
-            return $this->redirectToRoute('sortie_details', ['id'=> $sortie->getId()]);
-        }
-
-
-
-        return $this->render('sortie/create.html.twig', [
-            'sortieForm' => $sortieForm->createView()
-        ]);
-    }
 }
