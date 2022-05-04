@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"pseudo"}, message="There is already an account with this pseudo")
  */
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -41,7 +42,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50)
      */
     private $firstname;
 
@@ -53,10 +54,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $username;
+    private $pseudo;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $telephone;
 
@@ -77,22 +78,50 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $organisateur;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $photo;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $administrateur;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $actif;
+
+    /**
+     *
+     */
     public function __construct()
     {
         $this->organisateur = new ArrayCollection();
         $this->participants = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return $this
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -107,7 +136,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
 
     /**
@@ -115,7 +144,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
 
     /**
@@ -130,6 +159,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array $roles
+     * @return $this
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -145,6 +178,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return $this
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -172,11 +209,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
+    /**
+     * @param string|null $firstname
+     * @return $this
+     */
     public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
@@ -184,11 +228,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
+    /**
+     * @param string $lastname
+     * @return $this
+     */
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
@@ -196,18 +247,37 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setUsername(string $username): self
+    /**
+     * @return string|null
+     */
+    public function getPseudo(): ?string
     {
-        $this->username = $username;
+        return $this->pseudo;
+    }
+
+    /**
+     * @param string $pseudo
+     * @return $this
+     */
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getTelephone(): ?string
     {
         return $this->telephone;
     }
 
+    /**
+     * @param string $telephone
+     * @return $this
+     */
     public function setTelephone(string $telephone): self
     {
         $this->telephone = $telephone;
@@ -225,6 +295,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->participants;
     }
 
+    /**
+     * @param Sortie $participant
+     * @return $this
+     */
     public function addParticipant(Sortie $participant): self
     {
         if (!$this->participants->contains($participant)) {
@@ -234,6 +308,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @param Sortie $participant
+     * @return $this
+     */
     public function removeParticipant(Sortie $participant): self
     {
         $this->participants->removeElement($participant);
@@ -241,11 +319,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Campus|null
+     */
     public function getCampus(): ?Campus
     {
         return $this->campus;
     }
 
+    /**
+     * @param Campus|null $campus
+     * @return $this
+     */
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
@@ -261,6 +346,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->organisateur;
     }
 
+    /**
+     * @param Sortie $organisateur
+     * @return $this
+     */
     public function addOrganisateur(Sortie $organisateur): self
     {
         if (!$this->organisateur->contains($organisateur)) {
@@ -271,6 +360,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @param Sortie $organisateur
+     * @return $this
+     */
     public function removeOrganisateur(Sortie $organisateur): self
     {
         if ($this->organisateur->removeElement($organisateur)) {
@@ -279,6 +372,49 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
                 $organisateur->setOrganisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param string|null $photo
+     * @return $this
+     */
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getAdministrateur(): ?bool
+    {
+        return $this->administrateur;
+    }
+
+    public function setAdministrateur(bool $administrateur): self
+    {
+        $this->administrateur = $administrateur;
+
+        return $this;
+    }
+
+    public function getActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): self
+    {
+        $this->actif = $actif;
 
         return $this;
     }

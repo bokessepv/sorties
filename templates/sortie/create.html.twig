@@ -30,26 +30,24 @@
                 {{ form_label(sortieForm.infosSortie) }}
                 {{ form_widget(sortieForm.infosSortie) }}
 
-                {{ form_label(sortieForm.lieu) }}
-                {{ form_widget(sortieForm.lieu) }}
+                {{ form_label(sortieForm.photo) }}
+                {{ form_widget(sortieForm.photo) }}
+                {{ form_errors(sortieForm.photo) }}
 
-                <div>
-                    <button class="btn btn-primary" type="submit">
-                        Enregistrer
-                    </button>
-                </div>
 
+                <button class="btn btn-primary" type="submit">
+                    Enregistrer
+                </button>
                 {{ form_end(sortieForm) }}
-
             </div>
+            <div class="col-lg-6 mt-2">
 
-            <div class="col-lg-6">
 
                 {% form_theme lieuForm 'bootstrap_5_layout.html.twig' %}
                 {{ form_start(lieuForm) }}
 
-{#                <label for="campus">Campus :</label>#}
-{#                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">#}
+                <label for="campus">Campus :</label>
+                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">
 
                 {{ form_label(lieuForm.ville) }}
                 {{ form_widget(lieuForm.ville) }}
@@ -67,13 +65,15 @@
                 {{ form_label(lieuForm.longitude) }}
                 {{ form_widget(lieuForm.longitude) }}
 
-                {{ form_end(lieuForm) }}
+                <button class="btn btn-primary" type="submit">
+                    Enregistrer
+                </button>
 
+                {{ form_end(lieuForm) }}
 
 
             </div>
         </div>
-
 
     </div>
 {% endblock %}

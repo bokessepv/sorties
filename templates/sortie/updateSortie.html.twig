@@ -48,8 +48,8 @@
                 {% form_theme lieuForm 'bootstrap_5_layout.html.twig' %}
                 {{ form_start(lieuForm) }}
 
-                {#                <label for="campus">Campus :</label>#}
-                {#                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">#}
+                <label for="campus">Campus :</label>
+                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">
 
                 {{ form_label(lieuForm.ville) }}
                 {{ form_widget(lieuForm.ville) }}
