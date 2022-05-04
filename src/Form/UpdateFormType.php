@@ -14,21 +14,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
-class RegistrationFormType extends AbstractType
+class UpdateFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('username')
-            ->add('email')
-            ->add('first_name')
             ->add('lastname')
-            ->add('campus', EntityType::class,[
-                'class' => Campus::class,
-                'choice_label' => 'nom'
-            ])
+            ->add('first_name')
             ->add('telephone')
+            ->add('email')
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mots de passe doivent correspondre',
@@ -50,6 +47,14 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('campus', EntityType::class,[
+                'class' => Campus::class,
+                'choice_label' => 'nom'
+            ])
+            ->add('photo', FileType::class,
+                [ 'mapped' => false, // désactive le mappage avec le champ dans l'entité (qui attend une chaîne de caractère)
+                ]
+            )
         ;
     }
 

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil du participant{% endblock %}
+
+{% block body %}
+    <h1>{{ app.participant.username}}</h1>
+    {% for profil %}
+    <table>
+        <thead>
+        <th>firstname</th>
+        <th>lastname</th>
+        <th>telephone</th>
+        <th>email</th>
+        <th>campus</th>
+        </thead>
+        <tbody>
+        <p>fisrtname : {{ app.participant.firstname }}</p>
+        <p>lastname : {{ app.participant.lastname }}</p>
+        <p>telephone : {{ app.participant.telephone }}</p>
+        <p>email : {{ app.participant.email }}</p>
+        <p>campus : {{ app.participant.campus }}</p>
+
+        </tbody>
+    </table>
+    {% endfor %}
+
+{% endblock %}
