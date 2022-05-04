@@ -25,19 +25,15 @@ class Campus
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="campus")
-     */
-    private $siteOrganisateur;
-
-    /**
      * @ORM\OneToMany(targetEntity=Participant::class, mappedBy="campus")
      */
-    private $estRattache;
+    private $participants;
+
 
     public function __construct()
     {
-        $this->siteOrganisateur = new ArrayCollection();
-        $this->estRattache = new ArrayCollection();
+        $this->participants = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -57,63 +53,35 @@ class Campus
         return $this;
     }
 
-    /**
-     * @return Collection<int, Sortie>
-     */
-    public function getSiteOrganisateur(): Collection
-    {
-        return $this->siteOrganisateur;
-    }
-
-    public function addSiteOrganisateur(Sortie $siteOrganisateur): self
-    {
-        if (!$this->siteOrganisateur->contains($siteOrganisateur)) {
-            $this->siteOrganisateur[] = $siteOrganisateur;
-            $siteOrganisateur->setCampus($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSiteOrganisateur(Sortie $siteOrganisateur): self
-    {
-        if ($this->siteOrganisateur->removeElement($siteOrganisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($siteOrganisateur->getCampus() === $this) {
-                $siteOrganisateur->setCampus(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Participant>
      */
-    public function getEstRattache(): Collection
+    public function getParticipants(): Collection
     {
-        return $this->estRattache;
+        return $this->participants;
     }
 
-    public function addEstRattache(Participant $estRattache): self
+    public function addParticipant(Participant $participant): self
     {
-        if (!$this->estRattache->contains($estRattache)) {
-            $this->estRattache[] = $estRattache;
-            $estRattache->setCampus($this);
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+            $participant->setCampus($this);
         }
 
         return $this;
     }
 
-    public function removeEstRattache(Participant $estRattache): self
+    public function removeParticipant(Participant $participant): self
     {
-        if ($this->estRattache->removeElement($estRattache)) {
+        if ($this->participants->removeElement($participant)) {
             // set the owning side to null (unless already changed)
-            if ($estRattache->getCampus() === $this) {
-                $estRattache->setCampus(null);
+            if ($participant->getCampus() === $this) {
+                $participant->setCampus(null);
             }
         }
 
         return $this;
     }
+
 }

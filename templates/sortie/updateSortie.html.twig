@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{ parent() }} - Creer une sortie {% endblock %}
+{% block title %} {{ parent() }} - Modifier une sortie {% endblock %}
 
 {% block body %}
     <div class="jumbotron bg-primary text-center">
-        <h1>Creer la sortie</h1>
+        <h1>Modifier la sortie</h1>
     </div>
     <div class="container">
         <div class="row">
@@ -35,7 +35,7 @@
 
                 <div>
                     <button class="btn btn-primary" type="submit">
-                        Enregistrer
+                        Modifier
                     </button>
                 </div>
 
@@ -48,8 +48,8 @@
                 {% form_theme lieuForm 'bootstrap_5_layout.html.twig' %}
                 {{ form_start(lieuForm) }}
 
-{#                <label for="campus">Campus :</label>#}
-{#                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">#}
+                {#                <label for="campus">Campus :</label>#}
+                {#                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">#}
 
                 {{ form_label(lieuForm.ville) }}
                 {{ form_widget(lieuForm.ville) }}

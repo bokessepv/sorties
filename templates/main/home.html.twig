@@ -1,11 +1,59 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-        <h2 style="text-align: center">HI !!</h2>
+    <div class="jumbotron text-right">
+        <h4> Date du jour : {{ "now" | date("d/m/Y") }}</h4>
+        <h4>Participant: {{ app.user.firstname | capitalize }} {{ app.user.lastname | slice(0,1) | capitalize }}. </h4>
+    </div>
 
+
+
+            {# Tableau: liste des sorties et leur categories #}
+            <div class="container p-0 m-0">
+                <table class="table-sortie">
+                    <thead>
+                    <tr>
+                        <th>Nom de la sortie</th>
+                        <th>Date et heure de la sortie</th>
+                        <th>Cloture</th>
+                        <th>Inscrits/Places</th>
+                        <th>Etat</th>
+                        <th>Inscrit</th>
+                        <th>Organisateur</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for sortie in sorties %}
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut|date("d/m/Y h:m:s") }}</td>
+                            <td>{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
+                            <td>{{ sortie.nbInscriptionMax }}</td>
+                            <td>{{ sortie.etat.libelle }}</td>
+                            <td></td>
+                            <td>
+{#                                <a href="" title="profil organisateur">{{ sortie.participant.campus.nom }}</a>#}
+                            </td>
+                            <td>
+                                <ul>
+                                    <a href="{{ path("sortie_details", {"id" : sortie.id}) }}" title="vue detail sortie">Afficher</a> -
+                                    <a href="{{ path("sortie_update", {"id" : sortie.id}) }}" title="vue modifier sortie">Modifier</a>
+                                </ul>
+                             </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {# Si l'user est connecté, alors il pourra créer sa sortie, sinon on lui demandera de se connecter #}
+            <button class="button-creer" type="button">
+                <a href="{{ path('sortie_create') }}" title="creer sortie">Creer une sortie</a>
+            </button>
+        </article>
+    </section>
 {% endblock %}
-
 {% block title %}
-ACCUEIL | {{ parent() }}
+{{ parent() }} - Accueil
 {% endblock %}
 

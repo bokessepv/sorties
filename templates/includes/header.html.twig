@@ -1,42 +1,40 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         {% if app.user %}
-            <div class="logo">
-                <a href="{{ path('sortie_accueil') }}"><img src="{{ asset('img/logo_sortir.png') }}" alt="logo"></a>
-            </div>
             <div class="nav-item ml-5">
-                <a class=" navbar-brand " href="{{ path('sortie_accueil') }}">Sortir.com</a>
+                <a class="navbar-brand" href="{{ path('main_home') }}">Sortir.com</a>
             </div>
         {% else %}
-            <div class="logo">
-                <a href="{{ path('app_login') }}"><img src="{{ asset('img/logo_sortir.png') }}" alt="logo"></a>
-            </div>
             <div class="nav-item ml-5">
-                <a href="{{ path('app_login') }}">Sortir.com</a>
+                <a href="{{ path('app_login') }}"> <div class="navbar-brand">Sortir.com</div></a>
             </div>
         {% endif %}
-        <div class="container">
-            {% if app.user %}
-                <nav class="user-nav">
-                    <ul>
-                        {#                 afficher ville et campus si l'utilisateur a un role d'admin, sinon il est caché#}
-                        {% if is_granted("ROLE_ADMIN") %}
-                            <a href="" title="Ville">Ville</a>
-                            <a href="" title="Campus">Campus</a>
-                        {% endif %}
-                        {#                 Si l'utilisateur est connecté, alors seule le bouton Accueil, mon profil et se deconnecter#}
-                        {#                seront afficher dans la barre de nav, sinon, le bouton s'inscrire et se connecter apparaitrons#}
-                        {% if app.user %}
-                            <a href="{{ path("sortie_accueil") }}" title="Accueil">Accueil</a>
-                            <a href="{{ path('app_update') }}" title="Mon Profil">Mon profil</a>
-                            <a href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>
-                        {% else %}
-                            <a href="{{ path('app_register') }}" title="Create your account">S'inscrire</a>
-                            <a href="{{ path('app_login') }}" title="Login">Se connecter</a>
-                        {% endif %}
-                    </ul>
-                </nav>
-            {% endif %}
-        </div>
+
+        {% if app.user %}
+            <div style="justify-content: flex-end">
+                {% if is_granted("ROLE_ADMIN") %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Admin
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">Gestion des villes</a></li>
+                            <li><a class="dropdown-item" href="#">Gestion des campus</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ path('main_home') }}" title="Accueil">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_update') }}" title="Mon profil">Mon profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
 </nav>
 
 
