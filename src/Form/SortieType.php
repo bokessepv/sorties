@@ -52,6 +52,25 @@ class SortieType extends AbstractType
                 'required' => false
             ])
 
+            ->add('photo', FileType::class,[
+                'label'=> 'Photo (.jpg, .gif, .png, .svg)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new  File([
+                        'maxSize' => '500000k',
+                        'maxSizeMessage' => 'Fichier trop lourd',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/svg',
+                        ],
+                        'mimeTypesMessage' => 'Format de l\'image non valide'
+                    ])
+                ]
+            ])
+
 
             ->add('lieu', EntityType::class,[
                 'class' => Lieu::class,

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Lieu;
+use App\Entity\Serie;
 use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortieType;
@@ -231,13 +232,16 @@ class SortieController extends AbstractController
         EntityManagerInterface $entityManager
     )
     {
+
         $entityManager->remove($sortie);
         $entityManager->flush();
+
         $user = $this->getUser()->getId();
         $this->addFlash('danger', 'Votre sortie a bien été suprimmée');
         return $this->redirectToRoute('main_home', [
             'id' => $user
         ]);
+
         return $this->redirectToRoute('main_home');
     }
 

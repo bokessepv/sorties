@@ -2,21 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Participant;
-use App\Form\UpdateFormType;
 use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
-use App\Security\AppAuthenticator;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class MainController extends AbstractController
 {
@@ -30,14 +21,14 @@ class MainController extends AbstractController
     {
 
         $campus = $campusRepository->findAll();
-        $sorties = $sortieRepository->findByAll();
-
+        $sorties = $sortieRepository->findAll();
 
         return $this->render('main/home.html.twig', [
             'sorties' => $sorties,
             'campus' => $campus
         ]);
     }
+
     /**
      * @Route("/home/profilDetails{id}", name="main_profil_details")
      */
@@ -47,6 +38,8 @@ class MainController extends AbstractController
         SortieRepository $sortieRepository
     ): Response
     {
+
+
         $participant = $participantRepository->find($id);
         return $this->render('main/profil.html.twig', [
             'participant' => $participant,

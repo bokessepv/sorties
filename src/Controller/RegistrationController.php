@@ -23,7 +23,14 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+        SluggerInterface $slugger,
+        EntityManagerInterface $entityManager
+    ): Response
     {
         $user = new Participant();
         $user->setRoles(["ROLE_USER"]);
@@ -49,7 +56,7 @@ class RegistrationController extends AbstractController
                     $imageName = $safeImageName.'-'.uniqid().'.'.$imageFile->guessExtension();
                     try {
                         $imageFile->move(
-                            $this->getParameter('upload_photo_directory'),
+                            $this->getParameter('brochures_directory'),
                             $imageName);
                     }catch (FileException$e)
                     {
@@ -86,7 +93,7 @@ class RegistrationController extends AbstractController
 
     // Inscription Admin
     /**
-     * @Route("/register/admin", name="app_register_admin")
+     * @Route("/register/admin1233210", name="app_register_admin1233210")
      */
     public function registerAdmin(
         Request $request,
@@ -98,7 +105,7 @@ class RegistrationController extends AbstractController
     ): Response
     {
         $user = new Participant();
-        $user->setRoles(["ROLE_ADMIN"]);
+        $user->setRoles(["ROLE_USER"]);
         $user->setAdministrateur(true);
         $user->setActif(true);
 
@@ -120,7 +127,7 @@ class RegistrationController extends AbstractController
                     $imageName = $safeImageName.'-'.uniqid().'.'.$imageFile->guessExtension();
                     try {
                         $imageFile->move(
-                            $this->getParameter('upload_photo_directory'),
+                            $this->getParameter('brochures_directory'),
                             $imageName);
                     }catch (FileException$e)
                     {
@@ -157,15 +164,15 @@ class RegistrationController extends AbstractController
 
     //Pour modifier son profil
     /**
-     * @Route("/home/profil{id}", name="main_profil")
+     * @Route("/profil{id}", name="app_profil")
      */
     public function updateProfile(
-        Request                     $request,
-      SluggerInterface            $slugger,
-      EntityManagerInterface      $entityManager,
-      AppAuthenticator            $authenticator,
-      UserAuthenticatorInterface $userAuthenticator,
-      UserPasswordHasherInterface $userPasswordHasher
+                                  Request                     $request,
+                                  SluggerInterface            $slugger,
+                                  EntityManagerInterface      $entityManager,
+                                  AppAuthenticator            $authenticator,
+                                  UserAuthenticatorInterface $userAuthenticator,
+                                  UserPasswordHasherInterface $userPasswordHasher
     ): Response
     {
         $user = $this->getUser();

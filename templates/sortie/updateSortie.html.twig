@@ -35,6 +35,7 @@
 
                 <div class="mt-2 mb-2">
                     <button type="submit" class="btn btn-outline-success ">Modifier</button>
+
                     <a href="{{ path('delete', {'id':sortie.id}) }}"  class="btn btn-danger mt-2" onclick="deleteSortie()">Suprimer la sortie</a>
                     <a href="{{ path('main_home', {'id': app.user.id}) }}" class="btn btn-danger mt-2"  >Annuler</a>
                 </div>
@@ -48,8 +49,8 @@
                 {% form_theme lieuForm 'bootstrap_5_layout.html.twig' %}
                 {{ form_start(lieuForm) }}
 
-                {#  <label for="campus">Campus :</label>
-                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">#}
+{#                <label for="campus">Campus :</label>#}
+{#                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ sortie.campus.nom }}">#}
 
                 {{ form_label(lieuForm.ville) }}
                 {{ form_widget(lieuForm.ville) }}
