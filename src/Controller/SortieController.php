@@ -3,29 +3,34 @@
 namespace App\Controller;
 
 use App\Entity\Lieu;
+use App\Entity\Serie;
 use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortieType;
+use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/accueil/sortie", name="sortie_create")
+     * @Route("/home/sortie", name="sortie_create")
      */
     public function createSortie(
         Request $request,
         EntityManagerInterface $entityManager,
-        EtatRepository $etatRepository
+        EtatRepository $etatRepository,
+        SluggerInterface $slugger
     ): Response
     {
         $sortie = new Sortie();
@@ -42,12 +47,32 @@ class SortieController extends AbstractController
         $lieuForm->handleRequest($request);
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            if(!$sortieForm->get('photo')->getData())
+            {
+                $sortie->setPhoto('logo_sortir.png');
+            }
+            $imageFile = $sortieForm->get('photo')->getData();
+            if ($imageFile)
+            {
+
+                $originalImageName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeImageName =$slugger->slug($originalImageName);
+                $imageName = $safeImageName.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('upload_photo_directory'),
+                        $imageName);
+                }catch (FileException$e)
+                {
+                    return new Response($e->getMessage()) ;
+                }
+                $sortie->setPhoto($imageName);
+            }
 
 
             $etatCreation = $etatRepository->find(1);
             $sortie->setEtat($etatCreation);
 
-            $sortie->setDateHeureDebut(new DateTime());
             $sortie->addParticipant($participant);
             $sortie->setCampusOrganisateur($campusOrganisateur);
             $sortie->setOrganisateur($this->getUser());
@@ -55,7 +80,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            $this->addFlash('Bravo', 'Sortie ajoutés !');
+            $this->addFlash('success', 'Sortie ajoutés !');
             return $this->redirectToRoute('sortie_details', ['id'=> $sortie->getId()]);
         }
 
@@ -63,7 +88,7 @@ class SortieController extends AbstractController
             $entityManager->persist($lieu);
             $entityManager->flush();
 
-            $this->addFlash('Bravo', 'Lieu ajoutés');
+            $this->addFlash('success', 'Lieu ajoutés');
             return $this->redirectToRoute('sortie_create');
 
         }
@@ -74,19 +99,21 @@ class SortieController extends AbstractController
             'sortieForm' => $sortieForm->createView(),
             'lieuForm' => $lieuForm->createView(),
             'campus' => $this->getUser()->getCampus(),
+
         ]);
     }
 
 
 
     /**
-     * @Route("/accueil/sortie/{id}", name="sortie_update")
+     * @Route("/home/sortie/{id}", name="sortie_update")
      */
     public function updateSortie(int $id,
         Request $request,
         EntityManagerInterface $entityManager,
         SortieRepository $sortieRepository,
-        EtatRepository $etatRepository
+        EtatRepository $etatRepository,
+        SluggerInterface $slugger
     ): Response
     {
         $sortie = $sortieRepository->find($id);
@@ -105,11 +132,32 @@ class SortieController extends AbstractController
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
+            if(!$sortieForm->get('photo')->getData())
+            {
+                $sortie->setPhoto('logo_sortir.png');
+            }
+            $imageFile = $sortieForm->get('photo')->getData();
+            if ($imageFile)
+            {
 
-            $etatCreation = $etatRepository->find(1);
+                $originalImageName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeImageName =$slugger->slug($originalImageName);
+                $imageName = $safeImageName.'-'.uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('upload_photo_directory'),
+                        $imageName);
+                }catch (FileException$e)
+                {
+                    return new Response($e->getMessage()) ;
+                }
+                $sortie->setPhoto($imageName);
+            }
+
+
+            $etatCreation = $etatRepository->find(2);
             $sortie->setEtat($etatCreation);
 
-            $sortie->setDateHeureDebut(new DateTime());
             $sortie->addParticipant($participant);
             $sortie->setCampusOrganisateur($campusOrganisateur);
             $sortie->setOrganisateur($this->getUser());
@@ -135,29 +183,55 @@ class SortieController extends AbstractController
         return $this->render('sortie/updateSortie.html.twig', [
             'sortieForm' => $sortieForm->createView(),
             'lieuForm' => $lieuForm->createView(),
-            'campus' => $this->getUser()->getCampus(),
+            'sortie' => $sortie
         ]);
     }
 
     /**
-     * @Route("/accueil/details/{id}", name="sortie_details")
+     * @Route("/home/details/{id}", name="sortie_details")
      */
-    public function details(int $id, SortieRepository $sortieRepository): Response
+    public function detailsSortie(
+        int $id,
+        SortieRepository $sortieRepository,
+        LieuRepository $lieuRepository,
+        VilleRepository $villeRepository
+    ): Response
     {
+
         $sortie = $sortieRepository->find($id);
-//        ajout d'un participant a la sortie (
+        $lieuDeLaSortie = $sortie->getLieu();
+        $lieu = $lieuRepository->find($lieuDeLaSortie);
+        $ville = $villeRepository->find($lieu);
+        $user = $this->getUser();
 
 
-        // si il n'existe pas en bdd
+
         if(!$sortie){
             throw $this->createNotFoundException("Cette sortie n\'existe pas");
         }
 
         return $this->render('sortie/details.html.twig', [
-            'sortie'=>$sortie,
-            'participants'=>$sortie->getParticipants()->count(),
+            'sortie' =>$sortie,
+            'lieu' =>$lieu,
+            'campus' => $this->getUser()->getCampus(),
+            'ville'=>$ville,
+            'participants' => $sortie->getParticipants(),
+            'date'=>new \DateTime(),
+            'isParticipant'=>$sortie->getParticipants()->contains($user)
 
         ]);
     }
+
+    /**
+     * @Route("/delete/{id}", name="delete")
+     */
+    public function delete(Serie $serie, EntityManagerInterface $entityManager)
+    {
+        $entityManager->remove($serie);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('main_home');
+    }
+
 
 }

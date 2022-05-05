@@ -5,54 +5,49 @@
         <h4> Date du jour : {{ "now" | date("d/m/Y") }}</h4>
         <h4>Participant: {{ app.user.firstname | capitalize }} {{ app.user.lastname | slice(0,1) | capitalize }}. </h4>
     </div>
+    <section>
+
+        <div class="card-deck">
+        {% for sortie in sorties %}
+            <div class="card border-primary" style="width: 5rem;">
+                <img class="card-img-top" src="{{ asset('uploadPhoto/' ~sortie.photo) }}" alt="photo sortie">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h5 class="card-title">{{ sortie.nom }}</h5>
+                    </div>
+                    <p class="card-text">Description de la sortie: {{ sortie.infosSortie }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Date et heure de sortie: {{ sortie.dateHeureDebut | date("d/m/Y H:m") }}</li>
+                    <li class="list-group-item">Cloture: {{ sortie.dateLimiteInscription | date("d/m/Y") }}</li>
+                    <li class="list-group-item">Limites / Places: {{ sortie.nbInscriptionMax }}</li>
+                    <li class="list-group-item">Organisteur: {{ sortie.organisateur.pseudo }}</li>
+                </ul>
+                <div class="card-body">
+                    {% if app.user == sortie.organisateur %}
+                    <a href="{{ path('sortie_details', {'id' : sortie.id}) }}" class="card-link">Afficher</a>
+                    <a href="#" class="card-link">Annuler</a>
+                    {% else %}
+                        {% if app.user.administrateur == 1 %}
+                            <a href="#" class="card-link">Annuler</a>
+                        {% endif %}
+                        {% endif %}
 
 
 
-            {# Tableau: liste des sorties et leur categories #}
-            <div class="container p-0 m-0">
-                <table class="table-sortie">
-                    <thead>
-                    <tr>
-                        <th>Nom de la sortie</th>
-                        <th>Date et heure de la sortie</th>
-                        <th>Cloture</th>
-                        <th>Inscrits/Places</th>
-                        <th>Etat</th>
-                        <th>Inscrit</th>
-                        <th>Organisateur</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {% for sortie in sorties %}
-                        <tr>
-                            <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut|date("d/m/Y h:m:s") }}</td>
-                            <td>{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
-                            <td>{{ sortie.nbInscriptionMax }}</td>
-                            <td>{{ sortie.etat.libelle }}</td>
-                            <td></td>
-                            <td>
-{#                                <a href="" title="profil organisateur">{{ sortie.participant.campus.nom }}</a>#}
-                            </td>
-                            <td>
-                                <ul>
-                                    <a href="{{ path("sortie_details", {"id" : sortie.id}) }}" title="vue detail sortie">Afficher</a> -
-                                    <a href="{{ path("sortie_update", {"id" : sortie.id}) }}" title="vue modifier sortie">Modifier</a>
-                                </ul>
-                             </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                </div>
             </div>
-            {# Si l'user est connecté, alors il pourra créer sa sortie, sinon on lui demandera de se connecter #}
+        {% endfor %}
+            </div>
+
+
+
             <button class="button-creer" type="button">
                 <a href="{{ path('sortie_create') }}" title="creer sortie">Creer une sortie</a>
             </button>
-        </article>
     </section>
 {% endblock %}
+
 {% block title %}
 {{ parent() }} - Accueil
 {% endblock %}

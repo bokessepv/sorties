@@ -27,7 +27,7 @@
                         <a class="nav-link active" aria-current="page" href="{{ path('main_home') }}" title="Accueil">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_update') }}" title="Mon profil">Mon profil</a>
+                        <a class="nav-link" href="{{ path('main_profil', {'id' : app.user.id}) }}" title="Mon profil">Mon profil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}" title="Logout">Se deconnecter</a>

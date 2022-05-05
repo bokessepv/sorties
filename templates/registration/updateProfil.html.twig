@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+    <div class="jumbotron text-center">
+        <h5>Modifier le profil</h5>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <img src="{{ asset('uploadPhoto/' ~app.user.photo) }}" alt="photo User">
+            </div>
+            <div class="col-lg-6">
+                {% form_theme updateForm 'bootstrap_5_layout.html.twig' %}
+                {{ form_start(updateForm) }}
+
+                {{ form_label(updateForm.pseudo) }}
+                {{ form_widget(updateForm.pseudo) }}
+
+                {{ form_label(updateForm.firstname) }}
+                {{ form_widget(updateForm.firstname) }}
+
+                {{ form_label(updateForm.lastname) }}
+                {{ form_widget(updateForm.lastname) }}
+
+                {{ form_label(updateForm.telephone) }}
+                {{ form_widget(updateForm.telephone) }}
+
+                {{ form_label(updateForm.email) }}
+                {{ form_widget(updateForm.email) }}
+
+                {{ form_widget(updateForm.password) }}
+
+                {{ form_label(updateForm.campus) }}
+                {{ form_widget(updateForm.campus) }}
+
+                {{ form_label(updateForm.photo) }}
+                {{ form_widget(updateForm.photo) }}
+                {{ form_errors(updateForm.photo) }}
+
+                <div class="mt-2 mb-2">
+                    <button  class="btn btn-outline-warning " onclick="modifierProfil()">Modifier</button>&nbsp <a href="" class="btn btn-danger" onclick="supprimerProfil()">Supprimer mon compte</a>
+                </div>
+                {{ form_end(updateForm) }}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
