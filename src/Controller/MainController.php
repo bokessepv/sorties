@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\UpdateFormType;
+use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Security\AppAuthenticator;
@@ -22,14 +23,33 @@ class MainController extends AbstractController
     /**
      * @Route("/home", name="main_home")
      */
-    public function home(SortieRepository $sortieRepository): Response
+    public function home(
+        SortieRepository $sortieRepository,
+        CampusRepository $campusRepository
+    ): Response
     {
 
-
+        $campus = $campusRepository->findAll();
         $sorties = $sortieRepository->findByAll();
 
+
         return $this->render('main/home.html.twig', [
-            'sorties' => $sorties
+            'sorties' => $sorties,
+            'campus' => $campus
+        ]);
+    }
+    /**
+     * @Route("/home/profilDetails{id}", name="main_profil_details")
+     */
+    public function profilDetails(
+        int $id,
+        ParticipantRepository $participantRepository,
+        SortieRepository $sortieRepository
+    ): Response
+    {
+        $participant = $participantRepository->find($id);
+        return $this->render('main/profil.html.twig', [
+            'participant' => $participant,
         ]);
     }
 

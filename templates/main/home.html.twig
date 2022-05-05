@@ -1,54 +1,95 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
+
     <div class="jumbotron text-right">
         <h4> Date du jour : {{ "now" | date("d/m/Y") }}</h4>
         <h4>Participant: {{ app.user.firstname | capitalize }} {{ app.user.lastname | slice(0,1) | capitalize }}. </h4>
     </div>
     <section>
+    <div class="container">
+        <div class="row">
+            <div class="w-100">
+            <form action="", method="post">
+                <div class="col-lg-4">
+                   <label for="campus">Campus:</label>
+                   <select name="campus" id="campus">
+                    {% for campus in campus %}
+                        <option value="{{ campus.id }}">{{ campus.nom }}</option>
+                    {% endfor %}
+                   </select>
+                   <label for="nom">Le nom de la sortie contient:</label>
+                   <div class="input-group mb-3">
+                       <span class="input-group-text" id="basic-addon1">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg>
+                       </span>
+                       <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+                   </div>
+                   <label for="dateDebut">Entre </label> <input type="date" id="dateDebut" name="dateDebut"> <label for="dateFin">Et </label> <input type="date" id="dateFin" name="dateFin">
+                </div>
+                <div class="col-lg-4">
 
-        <div class="card-deck">
-        {% for sortie in sorties %}
-            <div class="card border-primary" style="width: 5rem;">
-                <img class="card-img-top" src="{{ asset('uploadPhoto/' ~sortie.photo) }}" alt="photo sortie">
-                <div class="card-body">
-                    <div class="card-title">
-                        <h5 class="card-title">{{ sortie.nom }}</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Sortie dont je suis l'organisateur/trice
+                        </label>
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Sorties auxquelles
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Default checkbox
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Default checkbox
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+
+                </div>
+            </form>
+            </div>
+        </div>
+        <div class="row">
+            {% for sortie in sorties %}<div class="col-lg-3 mt-3 mb-3">
+                <div class="card" style="border-radius: 20px; width: 18rem;">
+                    <img class="card-img-top" src="{{ asset('uploadPhoto/' ~sortie.photo) }}" alt="photo sortie">
+                </div>
+                <div class="card-body">
+                    <div class="card-title"> <h5>{{ sortie.nom }}</h5> </div>
                     <p class="card-text">Description de la sortie: {{ sortie.infosSortie }}</p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Date et heure de sortie: {{ sortie.dateHeureDebut | date("d/m/Y H:m") }}</li>
                     <li class="list-group-item">Cloture: {{ sortie.dateLimiteInscription | date("d/m/Y") }}</li>
-                    <li class="list-group-item">Limites / Places: {{ sortie.nbInscriptionMax }}</li>
-                    <li class="list-group-item">Organisteur: {{ sortie.organisateur.pseudo }}</li>
+                    <li class="list-group-item">Limites / Places: {{ sortie.participants.count}} / {{ sortie.nbInscriptionMax }}</li>
+                    <li class="list-group-item">
+                        <a href="{{path('main_profil_details', {'id': sortie.organisateur.id}) }}">Organisateur: {{ sortie.organisateur.pseudo }}</a>
+                    </li>
+
                 </ul>
-                <div class="card-body">
-                    {% if app.user == sortie.organisateur %}
+                {% if app.user == sortie.organisateur %}<a href="{{ path('sortie_update', {'id' : sortie.id}) }}" class="card-link">Modifier</a>
                     <a href="{{ path('sortie_details', {'id' : sortie.id}) }}" class="card-link">Afficher</a>
                     <a href="#" class="card-link">Annuler</a>
-                    {% else %}
-                        {% if app.user.administrateur == 1 %}
-                            <a href="#" class="card-link">Annuler</a>
-                        {% endif %}
-                        {% endif %}
-
-
-
-                </div>
-            </div>
-        {% endfor %}
-            </div>
-
-
-
-            <button class="button-creer" type="button">
-                <a href="{{ path('sortie_create') }}" title="creer sortie">Creer une sortie</a>
-            </button>
-    </section>
-{% endblock %}
-
-{% block title %}
-{{ parent() }} - Accueil
+                {% else %}{% if app.user.administrateur == 1 %}<a href="#" class="card-link">Annuler</a>
+                {% endif %}{% endif %}</div>
+            {% endfor %}</div>
+        <button class="button-creer" type="button">
+            <a href="{{ path('sortie_create') }}" title="creer sortie">Creer une sortie</a>
+        </button>
+    </div>
+</section>
+{% endblock %}{% block title %}{{ parent() }} - Accueil
 {% endblock %}
 

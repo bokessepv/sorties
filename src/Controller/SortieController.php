@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Lieu;
-use App\Entity\Serie;
 use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortieType;
@@ -11,6 +10,7 @@ use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -225,11 +225,19 @@ class SortieController extends AbstractController
     /**
      * @Route("/delete/{id}", name="delete")
      */
-    public function delete(Serie $serie, EntityManagerInterface $entityManager)
+    public function deleteSortie(
+        int $id,
+        Sortie $sortie,
+        EntityManagerInterface $entityManager
+    )
     {
-        $entityManager->remove($serie);
+        $entityManager->remove($sortie);
         $entityManager->flush();
-
+        $user = $this->getUser()->getId();
+        $this->addFlash('danger', 'Votre sortie a bien été suprimmée');
+        return $this->redirectToRoute('main_home', [
+            'id' => $user
+        ]);
         return $this->redirectToRoute('main_home');
     }
 

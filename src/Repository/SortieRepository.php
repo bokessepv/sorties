@@ -48,10 +48,10 @@ class SortieRepository extends ServiceEntityRepository
     }
 
     public function findByAll(){
-        $queryBuilder = $this->createQueryBuilder('c');
+        $queryBuilder = $this->createQueryBuilder('s');
 
-        $queryBuilder->andWhere('c.duree > 5');
-        $queryBuilder->orderBy('c.nom', 'DESC');
+        $queryBuilder->andWhere('s.duree > 0');
+        $queryBuilder->orderBy('s.dateHeureDebut', 'ASC');
 
         $query = $queryBuilder->getQuery();
         return  $query->getResult();

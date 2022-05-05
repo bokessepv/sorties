@@ -1,27 +1,26 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Profil du participant{% endblock %}
-
+{% block title %}{{ parent() }} - Profil du participant{% endblock %}
 {% block body %}
-    <h1>{{ app.user.pseudo}}</h1>
-    {% for profil %}
-    <table>
-        <thead>
-        <th>firstname</th>
-        <th>lastname</th>
-        <th>telephone</th>
-        <th>email</th>
-        <th>campus</th>
-        </thead>
-        <tbody>
-        <p>fisrtname : {{ app.user.firstname }}</p>
-        <p>lastname : {{ app.user.lastname }}</p>
-        <p>telephone : {{ app.user.telephone }}</p>
-        <p>email : {{ app.user.email }}</p>
-        <p>campus : {{ app.user.campus }}</p>
-
-        </tbody>
-    </table>
-    {% endfor %}
-
+    <div class="jumbotron text-center">
+        <h4>{{ participant.pseudo }}</h4>
+    </div>
+    <div class="container">
+        <div class="row">
+            {# Image profil du participant  #}
+            <div class="col-lg-4 mb-3">
+                <img src="{{ asset('uploadPhoto/' ~participant.photo) }}" alt="photo User">
+            </div>
+            {# formulaire infos du participants   #}
+            <div class="col-lg-8 mb-3">
+                <form>
+                    <label for="firstname">Prenom: </label><input type="text"  class="form-control" id="firstname" name="firstname" readonly value="{{ participant.firstname }}"><br>
+                    <label for="lastname">Nom: </label><input type="text"  class="form-control" id="lastname" name="lastname" readonly value="{{ participant.lastname }}"><br>
+                    <label for="telephone">Telephone: </label><input type="text"  class="form-control" id="telephone" name="telephone" readonly value="{{ participant.telephone }}"><br>
+                    <label for="email">Email: </label><input type="text"  class="form-control" id="email" name="email" readonly value="{{ participant.email }}"><br>
+                    <label for="campus">Campus: </label><input type="text"  class="form-control" id="campus" name="campus" readonly value="{{ participant.campus.nom }}"><br>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
