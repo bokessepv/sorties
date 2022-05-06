@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -219,6 +220,24 @@ class RegistrationController extends AbstractController
         ]);
 
 
+    }
+
+    /**
+     * @Route("/delete/{id}", name="delete_profil")
+     */
+    public function deleteProfil(
+        Participant $participant,
+        EntityManagerInterface $entityManager,
+        AuthenticationUtils $authenticationUtils
+    )
+    {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+        $entityManager->remove($participant);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Votre compte à bien été supprimé');
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername,'error' => $error] );
     }
 
 }

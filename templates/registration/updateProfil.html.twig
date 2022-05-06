@@ -15,32 +15,26 @@
                 {% form_theme updateForm 'bootstrap_5_layout.html.twig' %}
                 {{ form_start(updateForm) }}
 
-                {{ form_label(updateForm.pseudo) }}
-                {{ form_widget(updateForm.pseudo) }}
+                {{ form_row(updateForm.pseudo) }}
 
-                {{ form_label(updateForm.firstname) }}
-                {{ form_widget(updateForm.firstname) }}
+                {{ form_row(updateForm.firstname) }}
 
-                {{ form_label(updateForm.lastname) }}
-                {{ form_widget(updateForm.lastname) }}
+                {{ form_row(updateForm.lastname) }}
 
-                {{ form_label(updateForm.telephone) }}
-                {{ form_widget(updateForm.telephone) }}
+                {{ form_row(updateForm.telephone) }}
 
-                {{ form_label(updateForm.email) }}
-                {{ form_widget(updateForm.email) }}
+                {{ form_row(updateForm.email) }}
 
-                {{ form_widget(updateForm.password) }}
+                {{ form_row(updateForm.plainPassword) }}
 
-                {{ form_label(updateForm.campus) }}
-                {{ form_widget(updateForm.campus) }}
+                {{ form_row(updateForm.campus) }}<br><br>
 
-                {{ form_label(updateForm.photo) }}
-                {{ form_widget(updateForm.photo) }}
+                {{ form_row(updateForm.photo) }}
                 {{ form_errors(updateForm.photo) }}
 
                 <div class="mt-2 mb-2">
-                    <button  class="btn btn-outline-warning " onclick="modifierProfil()">Modifier</button>&nbsp <a href="" class="btn btn-danger" onclick="supprimerProfil()">Supprimer mon compte</a>
+                    <button type="submit" class="btn btn-outline-success ">Modifier</button>
+                    <a href="{{ path('delete_profil', {'id':app.user.id}) }}"  class="btn btn-danger mt-2" onclick="deleteSortie()">Suprimer le profil</a>
                 </div>
                 {{ form_end(updateForm) }}
             </div>

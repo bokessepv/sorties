@@ -48,25 +48,39 @@ class Lieu
     private $nom;
 
     /**
+     *
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu")
      */
     private $lieu;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->lieu = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getRue(): ?string
     {
         return $this->rue;
     }
 
+    /**
+     * @param string $rue
+     * @return $this
+     */
     public function setRue(string $rue): self
     {
         $this->rue = $rue;
@@ -74,11 +88,23 @@ class Lieu
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
     public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
+    public function __toString()
+    {
+        return $this->nom;
+    }
+
+    /**
+     * @param float $latitude
+     * @return $this
+     */
     public function setLatitude(float $latitude): self
     {
         $this->latitude = $latitude;
@@ -86,11 +112,18 @@ class Lieu
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
     public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
+    /**
+     * @param float $longitude
+     * @return $this
+     */
     public function setLongitude(float $longitude): self
     {
         $this->longitude = $longitude;
@@ -98,11 +131,18 @@ class Lieu
         return $this;
     }
 
+    /**
+     * @return Ville|null
+     */
     public function getVille(): ?Ville
     {
         return $this->ville;
     }
 
+    /**
+     * @param Ville|null $ville
+     * @return $this
+     */
     public function setVille(?Ville $ville): self
     {
         $this->ville = $ville;
@@ -110,11 +150,18 @@ class Lieu
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getNom(): ?string
     {
         return $this->nom;
     }
 
+    /**
+     * @param string $nom
+     * @return $this
+     */
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
@@ -130,6 +177,10 @@ class Lieu
         return $this->lieu;
     }
 
+    /**
+     * @param Sortie $lieu
+     * @return $this
+     */
     public function addLieu(Sortie $lieu): self
     {
         if (!$this->lieu->contains($lieu)) {
@@ -140,6 +191,10 @@ class Lieu
         return $this;
     }
 
+    /**
+     * @param Sortie $lieu
+     * @return $this
+     */
     public function removeLieu(Sortie $lieu): self
     {
         if ($this->lieu->removeElement($lieu)) {

@@ -12,70 +12,39 @@
                 {% form_theme sortieForm 'bootstrap_5_layout.html.twig' %}
                 {{ form_start(sortieForm) }}
 
-                {{ form_label(sortieForm.nom) }}
-                {{ form_widget(sortieForm.nom) }}
+                {{ form_row(sortieForm.nom) }}
 
-                {{ form_label(sortieForm.dateHeureDebut) }}
-                {{ form_widget(sortieForm.dateHeureDebut) }}
+                {{ form_row(sortieForm.dateHeureDebut) }}
 
-                {{ form_label(sortieForm.dateLimiteInscription) }}
-                {{ form_widget(sortieForm.dateLimiteInscription) }}
+                {{ form_row(sortieForm.dateLimiteInscription) }}
 
-                {{ form_label(sortieForm.duree) }}
-                {{ form_widget(sortieForm.duree) }}
+                {{ form_row(sortieForm.duree) }}
 
-                {{ form_label(sortieForm.nbInscriptionMax) }}
-                {{ form_widget(sortieForm.nbInscriptionMax) }}
+                {{ form_row(sortieForm.nbInscriptionMax) }}
 
-                {{ form_label(sortieForm.infosSortie) }}
-                {{ form_widget(sortieForm.infosSortie) }}
+                {{ form_row(sortieForm.infosSortie) }}
 
-                {{ form_label(sortieForm.lieu) }}
-                {{ form_widget(sortieForm.lieu) }}
-
-                <div class="mt-2 mb-2">
-                    <button type="submit" class="btn btn-outline-success ">Modifier</button>
-
-                    <a href="{{ path('delete', {'id':sortie.id}) }}"  class="btn btn-danger mt-2" onclick="deleteSortie()">Suprimer la sortie</a>
-                    <a href="{{ path('main_home', {'id': app.user.id}) }}" class="btn btn-danger mt-2"  >Annuler</a>
-                </div>
-
-                {{ form_end(sortieForm) }}
-
+                {{ form_row(sortieForm.photo) }}
+                {{ form_errors(sortieForm.photo) }}
             </div>
-
             <div class="col-lg-6">
+                <label class="campus">Campus: </label><input type="text"  class="form-control" id="campus" name="Campus" readonly value="{{ campus.nom }}"><br>
 
-                {% form_theme lieuForm 'bootstrap_5_layout.html.twig' %}
-                {{ form_start(lieuForm) }}
-
-{#                <label for="campus">Campus :</label>#}
-{#                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ sortie.campus.nom }}">#}
-
-                {{ form_label(lieuForm.ville) }}
-                {{ form_widget(lieuForm.ville) }}
-                <br>
-
-                {{ form_label(lieuForm.nom) }}
-                {{ form_widget(lieuForm.nom) }}
-
-                {{ form_label(lieuForm.rue) }}
-                {{ form_widget(lieuForm.rue) }}
-
-                {{ form_label(lieuForm.latitude) }}
-                {{ form_widget(lieuForm.latitude) }}
-
-                {{ form_label(lieuForm.longitude) }}
-                {{ form_widget(lieuForm.longitude) }}
-
-                {{ form_end(lieuForm) }}
-
-
+                {{ form_row(sortieForm.ville) }}
 
             </div>
         </div>
+        <div class="row">
+            <div class="mt-2 mb-2">
+                <button type="submit" class="btn btn-outline-success ">Modifier</button>
+                <a href="{{ path('delete_sortie', {'id':sortie.id}) }}"  class="btn btn-danger mt-2" onclick="deleteSortie()">Suprimer la sortie</a>
+                <a href="{{ path('main_home', {'id': app.user.id}) }}" class="btn btn-danger mt-2"  >Annuler</a>
+            </div>
 
-
+            {{ form_end(sortieForm) }}
+        </div>
     </div>
+
+
 {% endblock %}
 

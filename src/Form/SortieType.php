@@ -14,6 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
@@ -71,45 +74,63 @@ class SortieType extends AbstractType
                 ]
             ])
 
+        ;
 
-            ->add('lieu', EntityType::class,[
-                'class' => Lieu::class,
-                'label' => 'Lieu:',
+        $builder
+            ->add('ville', EntityType::class,[
+                'class' => Ville::class,
+                'placeholder' => 'Choissisez une ville',
+                'label' => 'Ville:',
                 'choice_label' => 'nom',
-                'required' => true
+                'mapped' => false
             ])
+        ;
+
+        $builder->get('ville')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function(FormEvent  $event)
+            {
+                $form = $event->getForm();
 
 
-            ->add('photo', FileType::class,[
-                'label'=> 'Photo (.jpg, .gif, .png, .svg)',
-                'mapped' => false,
-                'required' => false,
-                'constraints' => [
-                    new  File([
-                        'maxSize' => '500000k',
-                        'maxSizeMessage' => 'Fichier trop lourd',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/gif',
-                            'image/svg',
-                        ],
-                        'mimeTypesMessage' => 'Format de l\'image non valide'
-                    ])
-                ]
-            ])
+                $form->getParent()->add('lieu', EntityType::class, [
+                    'class' => Lieu::class,
+                    'placeholder' => 'Choissisez un lieu',
+                    'choices' => $form->getData()->getLieu()
+                ]);
+            }
+        )
 
 
-           /* ->add('campus', EntityType::class, [
-                'label' => 'Campus',
-                'class' => Campus::class,
-                'data' =>
-            ])
-           */
+
+
+
+
+
+
+
+//
+//
+//            ->add('lieu', EntityType::class,[
+//                'class' => Lieu::class,
+//                'label' => 'Lieu:',
+//                'choice_label' => 'nom',
+//                'required' => true
+//            ])
+
+//           ->add('campus', EntityType::class, [
+//                'label' => 'Campus',
+//                'class' => Campus::class,
+//                'choice_label' => 'nom',
+//                'mapped' => false
+//            ])
 
         ;
 
     }
+
+
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

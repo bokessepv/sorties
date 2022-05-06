@@ -27,7 +27,7 @@ class UpdateFormType extends AbstractType
             ->add('firstname')
             ->add('telephone')
             ->add('email')
-            ->add('password', RepeatedType::class, [
+            ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mots de passe doivent correspondre',
                 'options' => ['attr' => ['class' => 'password-field']],

@@ -66,6 +66,7 @@ class Sortie
     /**
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="lieu")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     private $lieu;
 

@@ -3,16 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Lieu;
-use App\Entity\Serie;
 use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortieType;
-use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -31,6 +28,7 @@ class SortieController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         EtatRepository $etatRepository,
+        VilleRepository $villeRepository,
         SluggerInterface $slugger
     ): Response
     {
@@ -38,6 +36,7 @@ class SortieController extends AbstractController
         $lieu = new Lieu();
 
         $participant = $this->getUser();
+
 
         $campusOrganisateur = $this->getUser()->getCampus();
 
@@ -77,6 +76,7 @@ class SortieController extends AbstractController
             $sortie->addParticipant($participant);
             $sortie->setCampusOrganisateur($campusOrganisateur);
             $sortie->setOrganisateur($this->getUser());
+
 
             $entityManager->persist($sortie);
             $entityManager->flush();
@@ -184,7 +184,8 @@ class SortieController extends AbstractController
         return $this->render('sortie/updateSortie.html.twig', [
             'sortieForm' => $sortieForm->createView(),
             'lieuForm' => $lieuForm->createView(),
-            'sortie' => $sortie
+            'sortie' => $sortie,
+            'campus' => $this->getUser()->getCampus()
         ]);
     }
 
@@ -224,10 +225,9 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="delete")
+     * @Route("/home/delete/{id}", name="delete_sortie")
      */
     public function deleteSortie(
-        int $id,
         Sortie $sortie,
         EntityManagerInterface $entityManager
     )
@@ -241,8 +241,6 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('main_home', [
             'id' => $user
         ]);
-
-        return $this->redirectToRoute('main_home');
     }
 
 
