@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\PropertySearch;
 use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,15 +19,28 @@ class MainController extends AbstractController
     public function home(
         SortieRepository $sortieRepository,
         CampusRepository $campusRepository
-    ): Response
+      //  PaginatorInterface $paginator,
+       // Request $request
+    )
     {
-
+        //Gestion des filtres
+       /* $search = new PropertySearch();
+        $form = $this->createForm(PropertySearch::class, $search);
+        $form->handleRequest($request);
+        */
         $campus = $campusRepository->findAll();
         $sorties = $sortieRepository->findAll();
-
+        /*
+        $properties = $paginator->paginate(
+            $this->$campusRepository->findAllVisibleQuery($search),
+            $this->$sortieRepository->findAllVisibleQuery($search),
+            $request->query->getString('page')
+        );
+        */
         return $this->render('main/home.html.twig', [
             'sorties' => $sorties,
-            'campus' => $campus
+            'campus' => $campus,
+        //    'form'=> $form->createView()
         ]);
     }
 

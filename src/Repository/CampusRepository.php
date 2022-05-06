@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Campus;
+use App\Entity\PropertySearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Query;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -46,6 +48,21 @@ class CampusRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
+    ///**
+     //* @return Query
+     //*/
+    /*
+    public function findAllVisibleQuery(PropertySearch $search): Query
+    {
+        $query->return $this->findVisibleQuery();
+
+        if ($search->getSearchCampus()) {
+            $query = $query->where()
+        }
+        return $query->getQuery();
+    }
+    */
 
     // /**
     //  * @return Campus[] Returns an array of Campus objects

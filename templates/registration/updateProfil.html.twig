@@ -34,7 +34,8 @@
 
                 <div class="mt-2 mb-2">
                     <button type="submit" class="btn btn-outline-success ">Modifier</button>
-                    <a href="{{ path('delete_profil', {'id':app.user.id}) }}"  class="btn btn-danger mt-2" onclick="deleteSortie()">Suprimer le profil</a>
+                    <a href="{{ path('delete_profil', {'id':app.user.id}) }}"
+                       class="btn btn-danger mt-2" onclick="deleteSortie()">Suprimer le profil</a>
                 </div>
                 {{ form_end(updateForm) }}
             </div>
