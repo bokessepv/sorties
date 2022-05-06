@@ -6,6 +6,7 @@
         <h4>Participant: {{ app.user.firstname | capitalize }} {{ app.user.lastname | slice(0,1) | capitalize }}. </h4>
     </div>
     <section>
+        {# Filtres #}
     <div class="container">
         <div class="row">
             <div class="w-100">
@@ -29,7 +30,6 @@
                    <label for="dateDebut">Entre </label> <input type="date" id="dateDebut" name="dateDebut"> <label for="dateFin">Et </label> <input type="date" id="dateFin" name="dateFin">
                 </div>
                 <div class="col-lg-4">
-
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
                         <label class="form-check-label" for="flexCheckChecked">
@@ -57,11 +57,16 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-
+                    <div class="mt-2 mb-2">
+                        <button type="submit" class="btn btn-outline-primary ">Rechercher</button>
+                    </div>
                 </div>
             </form>
             </div>
         </div>
+
+        {# Liste Sortie #}
+
         <div class="row">
             {% for sortie in sorties %}<div class="col-lg-3 mt-3 mb-3">
                 <div class="card" style="border-radius: 20px; width: 18rem;">
@@ -75,17 +80,28 @@
                     <li class="list-group-item">Date et heure de sortie: {{ sortie.dateHeureDebut | date("d/m/Y H:m") }}</li>
                     <li class="list-group-item">Cloture: {{ sortie.dateLimiteInscription | date("d/m/Y") }}</li>
                     <li class="list-group-item">Limites / Places: {{ sortie.participants.count}} / {{ sortie.nbInscriptionMax }}</li>
-                    <li class="list-group-item">
-                        <a href="{{path('main_profil_details', {'id': sortie.organisateur.id}) }}">Organisateur: {{ sortie.organisateur.pseudo }}</a>
+                    <li class="list-group-item">Organisateur:
+                        <a href="{{path('main_profil_details', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a>
                     </li>
-
+                    <li class="list-group-item">Etat: {{ sortie.etat.libelle }}</a></li>
+                    <li class="list-group-item">
+                        <a href="{{ path('sortie_details', {'id' : sortie.id}) }}" class="card-link">Afficher</a>
+                        {% if app.user == sortie.organisateur %}
+                            <a href="{{ path('sortie_update', {'id' : sortie.id}) }}" class="card-link">Modifier</a>
+                            <a href="{{ path('cancel_sortie', {'id' : sortie.id}) }}" class="card-link">Annuler</a>
+                        {% else %}
+                            {% if app.user.administrateur == 1 %}
+                                <a href="#" class="card-link">Annuler</a>
+                            {% endif %}
+                        {% endif %}
+                    </li>
                 </ul>
-                {% if app.user == sortie.organisateur %}<a href="{{ path('sortie_update', {'id' : sortie.id}) }}" class="card-link">Modifier</a>
-                    <a href="{{ path('sortie_details', {'id' : sortie.id}) }}" class="card-link">Afficher</a>
-                    <a href="#" class="card-link">Annuler</a>
-                {% else %}{% if app.user.administrateur == 1 %}<a href="#" class="card-link">Annuler</a>
-                {% endif %}{% endif %}</div>
-            {% endfor %}</div>
+
+
+
+                </div>
+            {% endfor %}
+        </div>
         <button class="button-creer" type="button">
             <a href="{{ path('sortie_create') }}" title="creer sortie">Creer une sortie</a>
         </button>

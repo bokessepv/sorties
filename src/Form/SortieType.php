@@ -2,10 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\Campus;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Repository\LieuRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -75,32 +75,89 @@ class SortieType extends AbstractType
             ])
 
         ;
-
         $builder
-            ->add('ville', EntityType::class,[
+            ->add('ville', EntityType::class, [
                 'class' => Ville::class,
-                'placeholder' => 'Choissisez une ville',
-                'label' => 'Ville:',
+                'placeholder' => '',
                 'choice_label' => 'nom',
                 'mapped' => false
             ])
         ;
 
+        $formModifier = function (FormInterface $form, Ville $ville = null) {
+            $lieu = null === $ville ? [] : $ville->getLieu();
+
+
+            $form->add('lieu', EntityType::class, [
+                'class' => Lieu::class,
+                'placeholder' => '',
+                'choices' => $lieu,
+            ]);
+        };
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formModifier) {
+                // this would be your entity, i.e.
+                $data = $event->getData();
+
+            }
+        );
+
         $builder->get('ville')->addEventListener(
             FormEvents::POST_SUBMIT,
-            function(FormEvent  $event)
-            {
-                $form = $event->getForm();
+            function (FormEvent $event) use ($formModifier) {
+                // It's important here to fetch $event->getForm()->getData(), as
+                // $event->getData() will get you the client data (that is, the ID)
+                $ville = $event->getForm()->getData();
 
-
-                $form->getParent()->add('lieu', EntityType::class, [
-                    'class' => Lieu::class,
-                    'placeholder' => 'Choissisez un lieu',
-                    'choices' => $form->getData()->getLieu()
-                ]);
+                // since we've added the listener to the child, we'll have to pass on
+                // the parent to the callback functions!
+                $formModifier($event->getForm()->getParent(), $ville);
             }
-        )
-
+        );
+    }
+//        $builder
+//            ->add('ville', EntityType::class,[
+//                'class' => Ville::class,
+//                'placeholder' => 'Choissisez une ville',
+//                'label' => 'Ville:',
+//                'choice_label' => 'nom',
+//                'mapped' => false
+//            ])
+//        ;
+//
+//        $formModifier = function(FormInterface $form, Ville $ville = null) {
+//            $lieu = null === $ville ? [] : $ville->getLieu();
+//
+//            $form->add('lieu', EntityType::class, [
+//                'class' => Lieu::class,
+//                'placeholder' => '',
+//                'choices' => $lieu
+//            ]);
+//    };
+//
+//        $builder->addEventListener(
+//        FormEvents::PRE_SET_DATA,
+//            function (FormEvent $event) use ($formModifier) {
+//                        // this would be your entity, i.e. Ville
+//                        $data = $event->getData();
+//
+//                        $formModifier($event->getForm(), $data->getVille());
+//                    }
+//        );
+//
+//
+//        $builder->get('ville')->addEventListener(
+//            FormEvents::POST_SUBMIT,
+//            function(FormEvent  $event)
+//            {
+//                $ville = $event->getForm()->getData();
+//                $formModifier($event->getForm()->getParent(), $sport);
+//
+//            }
+//        )
+//
 
 
 
@@ -125,9 +182,8 @@ class SortieType extends AbstractType
 //                'mapped' => false
 //            ])
 
-        ;
 
-    }
+
 
 
 

@@ -34,6 +34,7 @@ class RegistrationController extends AbstractController
     ): Response
     {
         $user = new Participant();
+
         $user->setRoles(["ROLE_USER"]);
         $user->setAdministrateur(false);
         $user->setActif(true);
@@ -200,7 +201,7 @@ class RegistrationController extends AbstractController
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $updateForm->get('password')->getData())
+                    $updateForm->get('plainPassword')->getData())
             );
 
             $entityManager->persist($user);

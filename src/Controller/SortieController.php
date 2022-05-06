@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -28,8 +29,8 @@ class SortieController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         EtatRepository $etatRepository,
-        VilleRepository $villeRepository,
-        SluggerInterface $slugger
+        SluggerInterface $slugger,
+        SortieRepository $sortieRepository
     ): Response
     {
         $sortie = new Sortie();
@@ -70,19 +71,45 @@ class SortieController extends AbstractController
             }
 
 
-            $etatCreation = $etatRepository->find(1);
-            $sortie->setEtat($etatCreation);
 
             $sortie->addParticipant($participant);
             $sortie->setCampusOrganisateur($campusOrganisateur);
             $sortie->setOrganisateur($this->getUser());
 
+            // J'initialise deux var $publish et $save par rapport a l'etat de la sortie
 
-            $entityManager->persist($sortie);
-            $entityManager->flush();
+            $publish = $request->request->get('publish');
+            $save = $request->request->get('save');
 
-            $this->addFlash('success', 'Sortie ajoutés !');
-            return $this->redirectToRoute('sortie_details', ['id'=> $sortie->getId()]);
+            /* Ici je fais en sorte que si la var save n'est pas null, alors tu me cree la sortie et tu setera l'etat a 1 qui dans la bdd est cree
+                sinon si l'utlisateur publie sa sortie, tu mets l'etat de sortie a 2 qui est ouvert
+            */
+            if($save != null)
+            {
+                $user = $this->getUser()->getId();
+                $etatCreation = $etatRepository->find(1);
+                $sortie->setEtat($etatCreation);
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+                $this->addFlash('success', 'Votre sortie à bien été sauvegardée');
+                return $this->redirectToRoute('main_home', [
+                    'id' => $user
+                ]);
+
+            }else
+            {
+                $sorties = $sortieRepository->findAll();
+                $etatOuvert = $etatRepository->find(2);
+                $sortie->setEtat($etatOuvert);
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+                $this->addFlash('success', 'Votre sortie à bien été publiée');
+                return $this->redirectToRoute('main_home', [
+                    'sorties' => $sorties
+                ]);
+            }
+
+
         }
 
         if($lieuForm->isSubmitted() && $lieuForm->isValid()){
@@ -240,6 +267,79 @@ class SortieController extends AbstractController
         $this->addFlash('danger', 'Votre sortie a bien été suprimmée');
         return $this->redirectToRoute('main_home', [
             'id' => $user
+        ]);
+    }
+
+    // Inscription sortie
+    /**
+     * @Route("/sortie/inscription{id}", name="inscription_sortie")
+     */
+    public function inscriptionSortie(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager)
+    {
+        $sortie = $sortieRepository->find($id);
+        $participant = $this->getUser();
+
+        $sortie->addParticipant($participant);
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+
+        $this->addFlash('success', 'Inscription réussite');
+        return $this->redirectToRoute('sortie_details',[
+            'id'=>$sortie->getId()
+        ]);
+    }
+
+
+    // Desinscription sortie
+    /**
+     * @Route("/sortie/seDesinscrire{id}", name="desinscrire_sortie")
+     */
+    public function sortieDesister(int $id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager)
+    {
+        $sortie = $sortieRepository->find($id);
+        $participant = $this->getUser();
+
+        $sortie->removeParticipant($participant);
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Votre désinscription a  été pris en compte');
+        return $this->redirectToRoute('sortie_details',[
+            'id' =>$sortie->getId(),
+        ]);
+    }
+
+    // Annuler sortie
+    /**
+     * @Route("/sortie/cancel{id}", name="cancel_sortie")
+     */
+    public function cancelSortie(int $id,SortieRepository $sortieRepository,
+                                     Request $request,
+                                     EntityManagerInterface $entityManager,
+                                     EtatRepository $etatRepository)
+    {
+        $sortie = $sortieRepository->find($id);
+        $annuler = $request->request->get('annuler');
+
+        if ($annuler != null)
+        {
+            $etatAnnuler = $etatRepository->find(6);
+            $sortie->setEtat($etatAnnuler);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('danger', 'Votre sortie bien été annulée');
+            return $this->redirectToRoute('main_home');
+        }
+
+
+
+        return $this->render('sortie/cancel.html.twig', [
+            'sortie' =>$sortie,
+            'campus' => $this->getUser()->getCampus(),
+            'lieu' => $sortie->getLieu(),
+            'ville' => $sortie->getLieu()->getVille()
         ]);
     }
 

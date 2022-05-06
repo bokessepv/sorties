@@ -34,17 +34,15 @@
 
                 {{ form_row(sortieForm.ville) }}
 
-{#                {{ form_row(sortieForm.lieu) }}#}
 
-{#                <label class="rue">Rue: </label><input type="text"  class="form-control" id="rue" name="rue" readonly value="{{  }}">#}
-{#                <label class="codePostal">Code Postal: </label><input type="text"  class="form-control" id="campus" name="Campus" readonly value="{{ sortieForm.lieu.codePostal }}">#}
-{#                <label class="latitude">Latitude: </label><input type="text"  class="form-control" id="campus" name="Campus" readonly value="{{ sortieForm.lieu.latitude }}" >#}
-{#                <label class="longitude">Longitude: </label><input type="text"  class="form-control" id="campus" name="Campus" readonly value="{{ sortieForm.lieu.longitude }}" >#}
+
             </div>
         </div>
             <div class="row">
-                <div class="mt-2 mb-2">
-                    <button type="submit" class="btn btn-outline-primary ">Enregister</button>
+                <div class="mt-2 mb-2 text-center">
+                    <button type="submit"  class="btn btn-outline-primary" name="publish" id="publish" value="publish" onclick="publishSortie()">Publier
+                    </button>&nbsp; <button  type="submit"  class="btn btn-outline-success " name="save"  id="save" value="save">Sauvegarder</button>
+                    <a href="{{ path('main_home') }}" class="btn btn-danger mt-2">Annuler</a>
                 </div>
 
                 {{ form_end(sortieForm) }}
@@ -53,37 +51,9 @@
 
 
 
-{#                {% form_theme lieuForm 'bootstrap_5_layout.html.twig' %}#}
-{#                {{ form_start(lieuForm) }}#}
 
-{#                <label for="campus">Campus :</label>#}
-{#                <input class="form-control" readonly type="text" id="campus" name="campus" value="{{ campus.nom }}">#}
+    <script>
 
-{#                {{ form_label(lieuForm.ville) }}#}
-{#                {{ form_widget(lieuForm.ville) }}#}
-{#                <br>#}
-
-{#                {{ form_label(lieuForm.nom) }}#}
-{#                {{ form_widget(lieuForm.nom) }}#}
-
-{#                {{ form_label(lieuForm.rue) }}#}
-{#                {{ form_widget(lieuForm.rue) }}#}
-
-{#                {{ form_label(lieuForm.latitude) }}#}
-{#                {{ form_widget(lieuForm.latitude) }}#}
-
-{#                {{ form_label(lieuForm.longitude) }}#}
-{#                {{ form_widget(lieuForm.longitude) }}#}
-
-{#                <button class="btn btn-primary" type="submit">#}
-{#                    Enregistrer#}
-{#                </button>#}
-
-{#                {{ form_end(lieuForm) }}#}
-
-
-{#            </div>#}
-{#        </div>#}
-
+    </script>
 {% endblock %}
 
